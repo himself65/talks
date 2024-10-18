@@ -1,5 +1,5 @@
 {
-  "name": "how-to-create-llm-in-node.js",
+  "name": "monorepo",
   "packageManager": "pnpm@9.12.1",
   "scripts": {
     "lint:fix": "prettier --write ."
