@@ -1,43 +1,43 @@
-'use server'
-import { createAI } from 'ai/rsc'
-import OpenAI from 'openai'
-import type { ReactNode } from 'react'
+"use server";
+import { createAI } from "ai/rsc";
+import OpenAI from "openai";
+import type { ReactNode } from "react";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || ''
-})
+  apiKey: process.env.OPENAI_API_KEY || "",
+});
 
-export async function confirmPurchase (
+export async function confirmPurchase(
   symbol: string,
   price: number,
-  amount: number
+  amount: number,
 ) {
-  'use server'
+  "use server";
   // todo
 }
 
-export async function submitUserMessage (content: string) {
-  'use server'
+export async function submitUserMessage(content: string) {
+  "use server";
   // todo
 }
 
 const initialAIState: {
-  role: 'user' | 'assistant' | 'system' | 'function';
+  role: "user" | "assistant" | "system" | "function";
   content: string;
   id?: string;
   name?: string;
-}[] = []
+}[] = [];
 
 const initialUIState: {
   id: number;
   display: ReactNode;
-}[] = []
+}[] = [];
 
 export const AI = createAI({
   actions: {
     submitUserMessage,
-    confirmPurchase
+    confirmPurchase,
   },
   initialUIState,
-  initialAIState
-})
+  initialAIState,
+});

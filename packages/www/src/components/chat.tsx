@@ -2,20 +2,16 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useUIState, useActions } from "ai/rsc";
-import { UserMessage } from './message';
+import { UserMessage } from "./message";
 
 import { ChatScrollAnchor } from "../lib/hooks/chat-scroll-anchor";
 import Textarea from "react-textarea-autosize";
 import { useEnterSubmit } from "../lib/hooks/use-enter-submit";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from './ui/tooltip';
-import { IconArrowElbow, IconPlus } from './ui/icons';
-import { Button } from './ui/button';
-import { ChatList } from './chat-list';
-import { EmptyScreen } from './empty-screen';
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { IconArrowElbow, IconPlus } from "./ui/icons";
+import { Button } from "./ui/button";
+import { ChatList } from "./chat-list";
+import { EmptyScreen } from "./empty-screen";
 import { AI } from "../ai/provider";
 
 export const Chat = () => {

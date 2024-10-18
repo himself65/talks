@@ -1,4 +1,10 @@
 {
   "name": "how-to-create-llm-in-node.js",
-  "packageManager": "pnpm@9.12.1"
+  "packageManager": "pnpm@9.12.1",
+  "scripts": {
+    "lint:fix": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
 }
