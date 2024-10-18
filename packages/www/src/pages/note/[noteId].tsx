@@ -5,7 +5,7 @@ export default function Note({ noteId }: { noteId: string }) {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <NoteTitle noteId={noteId} />
-      <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
+      <div className="overflow-scroll h-0 flex flex-grow items-center justify-center rounded-lg border border-dashed shadow-sm">
         <Editor />
       </div>
     </main>

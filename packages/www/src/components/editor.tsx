@@ -8,7 +8,7 @@ export default function Editor() {
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none",
+          "prose prose-sm sm:prose-base lg:prose-lg m-5 focus:outline-none",
       },
     },
     immediatelyRender: false,
