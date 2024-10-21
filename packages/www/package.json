@@ -44,7 +44,7 @@
     "react-textarea-autosize": "^8.5.4",
     "tailwind-merge": "^2.5.4",
     "usehooks-ts": "^3.1.0",
-    "waku": "0.21.4",
+    "waku": "0.21.5",
     "zod": "^3.23.8",
     "zod-to-json-schema": "^3.23.3"
   },
