@@ -36,7 +36,17 @@ It is built using:
   - AsyncLocalStorage
   - Web Stream API
 
-## You can run the web app locally
+## Usage
+
+### Requirements
+
+- Node.js >= 20.x
+- Environment Variables
+  - `DATABASE_URL` - The Postgres database URL
+  - `OPENAI_API_KEY` - The OpenAI API key
+  - `LLAMA_CLOUD_API_KEY`(Optional) - The LlamaCloud API key
+
+### Development
 
 ```bash
 pnpm install
