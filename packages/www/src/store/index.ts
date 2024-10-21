@@ -40,9 +40,7 @@ export const getNote = cache(async (id: string): Promise<Note> => {
 
 export const addNote = async (note: Pick<Note, "title" | "content">) => {
   "use server";
-  const data =
-    await sql`INSERT INTO notes (title, content) VALUES (${note.title}, ${note.content})`;
-  unstable_rerenderRoute(`/note/${data[0]!.id}`);
+  await sql`INSERT INTO notes (title, content) VALUES (${note.title}, ${note.content})`;
   unstable_rerenderRoute(`/`);
 };
 

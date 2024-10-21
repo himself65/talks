@@ -42,12 +42,13 @@ It is built using:
 
 - Node.js >= 20.x
 - Environment Variables
+
   - `DATABASE_URL` - The Postgres database URL
   - `OPENAI_API_KEY` - The OpenAI API key
   - `LLAMA_CLOUD_API_KEY`(Optional) - The LlamaCloud API key
 
 - SQL Setup
-  
+
   You need to create a table before running the app.
 
   ```sql
