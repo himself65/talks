@@ -37,7 +37,7 @@ export default async function RootLayout({ children, path }: RootLayoutProps) {
                 <Suspense>{children}</Suspense>
               </div>
             </SidebarInset>
-            <ChatSidebar />
+            <ChatSidebar path={path} />
           </div>
         </ComposeContextProvider>
       </body>

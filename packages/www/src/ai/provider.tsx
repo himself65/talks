@@ -111,13 +111,14 @@ export const AI = createAI({
         filters: {
           filters: [
             {
-              key: "metadata",
-              value: `noteId=${noteId}`,
-              operator: FilterOperator.CONTAINS,
+              key: "noteId",
+              value: noteId,
+              operator: FilterOperator.EQ,
             },
           ],
         },
       });
+      await retriever.retrieve(message);
       const chatEngine = new ContextChatEngine({
         retriever,
         chatHistory: [...prevMessages],

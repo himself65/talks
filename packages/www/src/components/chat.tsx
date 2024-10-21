@@ -11,15 +11,18 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { IconArrowElbow, IconPlus } from "./ui/icons";
 import { Button } from "./ui/button";
 import { ChatList } from "./chat-list";
-import { EmptyScreen } from "./empty-screen";
 import { AI } from "../ai/provider";
 import { useAtomValue } from "jotai/react";
 import { editorAtom } from "../store/client";
 
-export const Chat = () => {
+export type ChatProps = {
+  noteId: string | null;
+};
+
+export const Chat = (props: ChatProps) => {
   const editor = useAtomValue(editorAtom);
   const [{ messages }, setUIState] = useUIState<typeof AI>();
-  const { submitSimple } = useActions<typeof AI>();
+  const { submitSimple, submitIndex } = useActions<typeof AI>();
   const [inputValue, setInputValue] = useState("");
   const { formRef, onKeyDown } = useEnterSubmit();
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -62,11 +65,9 @@ export const Chat = () => {
               onSubmit={async (e: any) => {
                 e.preventDefault();
 
-                // // Blur focus on mobile
-                // if (window.innerWidth < 600) {
-                //   e.target["message"]?.blur();
-                // }
-                //
+                const noteId = props.noteId;
+                if (!noteId) return;
+
                 const value = inputValue.trim();
                 setInputValue("");
                 if (!value) return;
@@ -85,7 +86,7 @@ export const Chat = () => {
 
                 try {
                   // Submit and get response message
-                  const responseMessage = await submitSimple(value);
+                  const responseMessage = await submitIndex(value, noteId);
                   setUIState((state) => ({
                     ...state,
                     messages: [...state.messages, responseMessage],
@@ -97,23 +98,6 @@ export const Chat = () => {
               }}
             >
               <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow bg-background sm:rounded-md sm:border sm:px-12">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="absolute left-0 w-8 h-8 p-0 rounded-full top-4 bg-background sm:left-4"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.location.reload();
-                      }}
-                    >
-                      <IconPlus />
-                      <span className="sr-only">New Chat</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>New Chat</TooltipContent>
-                </Tooltip>
                 <Textarea
                   ref={inputRef}
                   tabIndex={0}
