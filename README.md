@@ -14,6 +14,7 @@ It is built using:
 - [LlamaCloud](https://cloud.llamaindex.ai) - 🦙🌩️ The new generation of managed parsing, ingestion, and retrieval
   services, designed to bring production-grade context-augmentation to your LLM and RAG applications
 - [TipTap](https://tiptap.dev/) - 📝 The headless editor framework
+- [Shadcn](https://shadcn.com/) - 🌈 Beautifully designed components
 
 ### Key Features
 
