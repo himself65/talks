@@ -1,5 +1,5 @@
 export function ChatList({ messages }: { messages: any[] }) {
-  if (!messages.length) {
+  if (messages.length === 0) {
     return null;
   }
 

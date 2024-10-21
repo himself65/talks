@@ -1,9 +1,15 @@
 "use client";
-import { useEditor, EditorContent } from "@tiptap/react";
+import {
+  useEditor,
+  EditorContent,
+  Editor as TipTapEditor,
+} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { updateNoteContent } from "../store";
+import { editorAtom } from "../store/client";
+import { useSetAtom } from "jotai";
 
 export type EditorProps = {
   id: string;
@@ -27,6 +33,13 @@ export default function Editor(props: EditorProps) {
     immediatelyRender: false,
     content: props.content,
   });
+
+  const [prevEditor, setPrevEditor] = useState<TipTapEditor | null>(null);
+  const setEditor = useSetAtom(editorAtom);
+  if (editor && editor !== prevEditor) {
+    setEditor(editor);
+    setPrevEditor(editor);
+  }
 
   const prevState = useRef<string>();
 

@@ -30,6 +30,7 @@
     "clsx": "^2.1.1",
     "d3-scale": "^4.0.2",
     "date-fns": "^4.1.0",
+    "foxact": "^0.2.39",
     "jotai": "^2.10.1",
     "llamaindex": "^0.7.3",
     "lucide-react": "^0.453.0",
@@ -47,7 +48,7 @@
   },
   "devDependencies": {
     "@types/d3-scale": "^4.0.8",
-    "@types/node": "^22.7.5",
+    "@types/node": "^22.7.7",
     "@types/react": "18.3.11",
     "@types/react-dom": "18.3.0",
     "autoprefixer": "10.4.20",

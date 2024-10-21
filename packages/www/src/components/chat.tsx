@@ -13,10 +13,13 @@ import { Button } from "./ui/button";
 import { ChatList } from "./chat-list";
 import { EmptyScreen } from "./empty-screen";
 import { AI } from "../ai/provider";
+import { useAtomValue } from "jotai/react";
+import { editorAtom } from "../store/client";
 
 export const Chat = () => {
+  const editor = useAtomValue(editorAtom);
   const [{ messages }, setUIState] = useUIState<typeof AI>();
-  const { submitUserMessage } = useActions<typeof AI>();
+  const { submitSimple } = useActions<typeof AI>();
   const [inputValue, setInputValue] = useState("");
   const { formRef, onKeyDown } = useEnterSubmit();
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -47,12 +50,8 @@ export const Chat = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-grow">
-        {messages.length ? (
-          <>
-            <ChatList messages={messages} />
-          </>
-        ) : null}
+      <div className="flex-grow mt-8">
+        <ChatList messages={messages} />
         <ChatScrollAnchor trackVisibility={true} />
       </div>
       <div className="w-full">
@@ -68,30 +67,33 @@ export const Chat = () => {
                 //   e.target["message"]?.blur();
                 // }
                 //
-                // const value = inputValue.trim();
-                // setInputValue("");
-                // if (!value) return;
-                //
-                // // Add user message UI
-                // setMessages((currentMessages) => [
-                //   ...currentMessages,
-                //   {
-                //     id: Date.now(),
-                //     display: <UserMessage>{value}</UserMessage>,
-                //   },
-                // ]);
-                //
-                // try {
-                //   // Submit and get response message
-                //   const responseMessage = await submitUserMessage(value);
-                //   setMessages((currentMessages) => [
-                //     ...currentMessages,
-                //     responseMessage,
-                //   ]);
-                // } catch (error) {
-                //   // You may want to show a toast or trigger an error state.
-                //   console.error(error);
-                // }
+                const value = inputValue.trim();
+                setInputValue("");
+                if (!value) return;
+
+                // Add user message UI
+                setUIState((state) => ({
+                  ...state,
+                  messages: [
+                    ...state.messages,
+                    {
+                      id: Date.now(),
+                      display: <UserMessage>{value}</UserMessage>,
+                    },
+                  ],
+                }));
+
+                try {
+                  // Submit and get response message
+                  const responseMessage = await submitSimple(value);
+                  setUIState((state) => ({
+                    ...state,
+                    messages: [...state.messages, responseMessage],
+                  }));
+                } catch (error) {
+                  // You may want to show a toast or trigger an error state.
+                  console.error(error);
+                }
               }}
             >
               <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow bg-background sm:rounded-md sm:border sm:px-12">

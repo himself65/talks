@@ -22,7 +22,9 @@ export const formatNumber = (value: number) =>
 export const runAsyncFnWithoutBlocking = (
   fn: (...args: any) => Promise<any>,
 ) => {
-  fn();
+  fn().catch((error) => {
+    console.error(error);
+  });
 };
 
 export const sleep = (ms: number) =>

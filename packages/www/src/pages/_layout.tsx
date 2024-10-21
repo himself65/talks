@@ -11,6 +11,7 @@ import {
 } from "../components/ui/sidebar";
 import { AppSidebar } from "../components/app-sidebar";
 import { ChatSidebar } from "../components/chat-sidebar";
+import { ComposeContextProvider } from "foxact/compose-context-provider";
 
 type RootLayoutProps = { children: ReactNode; path: string };
 
@@ -21,22 +22,24 @@ export default async function RootLayout({ children, path }: RootLayoutProps) {
         <title>LlamaIndex.TS Example</title>
       </head>
       <body>
-        <SidebarProvider>
-          <TooltipProvider>
-            <AI>
-              <div className="h-screen w-full flex">
-                <AppSidebar />
-                <SidebarInset>
-                  <div className="flex flex-col flex-1">
-                    <SidebarTrigger />
-                    <Suspense>{children}</Suspense>
-                  </div>
-                </SidebarInset>
-                <ChatSidebar />
+        <ComposeContextProvider
+          contexts={[
+            <SidebarProvider />,
+            <TooltipProvider children={null} />,
+            <AI children={null} />,
+          ]}
+        >
+          <div className="h-screen w-full flex">
+            <AppSidebar />
+            <SidebarInset>
+              <div className="flex flex-col flex-1">
+                <SidebarTrigger />
+                <Suspense>{children}</Suspense>
               </div>
-            </AI>
-          </TooltipProvider>
-        </SidebarProvider>
+            </SidebarInset>
+            <ChatSidebar />
+          </div>
+        </ComposeContextProvider>
       </body>
     </html>
   );
