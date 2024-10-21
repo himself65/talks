@@ -6,6 +6,11 @@ import { neon } from "@neondatabase/serverless";
 import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
 
 export const sql = neon(process.env.DATABASE_URL!);
+// fixme: workaround for llamaindex-ts
+// @ts-expect-error
+sql.unsafe = (query: string, params: any) => {
+  return sql.call(sql, query, params);
+};
 
 export const vectorStore = new PGVectorStore({
   shouldConnect: false,

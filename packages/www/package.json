@@ -36,7 +36,6 @@
     "jotai": "^2.10.1",
     "llamaindex": "^0.7.3",
     "lucide-react": "^0.453.0",
-    "openai": "^4.67.3",
     "react": "19.0.0-rc-bf7e210c-20241017",
     "react-dom": "19.0.0-rc-bf7e210c-20241017",
     "react-intersection-observer": "^9.13.1",

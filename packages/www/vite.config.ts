@@ -6,8 +6,5 @@ export default ({ mode }: any) => {
         mode === "development" ? "ai/rsc" : undefined,
       ].filter(Boolean),
     },
-    ssr: {
-      external: ["llamaindex"],
-    },
   };
 };
