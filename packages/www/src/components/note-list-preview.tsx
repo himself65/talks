@@ -13,18 +13,15 @@ export const NoteListPreview = async ({
   return (
     <ScrollArea className="h-96">
       {notes.map((note) => (
-        <Link to={`/note/${note.id}`} key={note.id}>
+        <a href={`/note/${note.id}`} key={note.id}>
           <div
             className={`p-4 border-b border-border cursor-pointer hover:bg-accent ${
               note.id === currentNoteId ? "bg-accent" : ""
             }`}
           >
             <h3 className="font-semibold truncate">{note.title}</h3>
-            <p className="text-sm text-muted-foreground truncate">
-              {note.content}
-            </p>
           </div>
-        </Link>
+        </a>
       ))}
     </ScrollArea>
   );

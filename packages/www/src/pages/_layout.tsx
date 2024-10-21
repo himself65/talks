@@ -1,6 +1,6 @@
 import "../styles.css";
 
-import type { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 
 import { AI } from "../ai/provider";
 import { TooltipProvider } from "../components/ui/tooltip";
@@ -33,7 +33,9 @@ type RootLayoutProps = { children: ReactNode; path: string };
 export default async function RootLayout({ children, path }: RootLayoutProps) {
   return (
     <html>
-      <head></head>
+      <head>
+        <title>LlamaIndex.TS Example</title>
+      </head>
       <body>
         <TooltipProvider>
           <div className="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -166,7 +168,7 @@ export default async function RootLayout({ children, path }: RootLayoutProps) {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </header>
-                {children}
+                <Suspense>{children}</Suspense>
               </div>
             </AI>
           </div>

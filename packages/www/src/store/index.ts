@@ -9,6 +9,7 @@
  */
 import { cache } from "react";
 import { sql } from "../lib/sql";
+import { unstable_rerenderRoute } from "waku/router/server";
 
 export type Note = {
   id: string;
@@ -41,18 +42,17 @@ export const addNote = async (note: Pick<Note, "title" | "content">) => {
   "use server";
   const data =
     await sql`INSERT INTO notes (title, content) VALUES (${note.title}, ${note.content})`;
-  // todo: rerender the url
+  unstable_rerenderRoute(`/note/${data[0]!.id}`);
+  unstable_rerenderRoute(`/`);
 };
 
 export const updateNoteTitle = async (id: string, title: string) => {
   "use server";
-  const data = await sql`UPDATE notes SET title = ${title} WHERE id = ${id}`;
-  // todo: rerender the url
+  await sql`UPDATE notes SET title = ${title} WHERE id = ${id}`;
+  unstable_rerenderRoute(`/note/${id}`);
 };
 
 export const updateNoteContent = async (id: string, content: string) => {
   "use server";
-  const data =
-    await sql`UPDATE notes SET content = ${content} WHERE id = ${id}`;
-  // todo: rerender the url
+  await sql`UPDATE notes SET content = ${content} WHERE id = ${id}`;
 };
