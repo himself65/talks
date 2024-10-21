@@ -1,28 +1,30 @@
-"use client";
-import { useAtomValue, useAtom } from "jotai";
-import { notesAtom } from "../store/client";
+import { getNotes } from "../store";
 import { ScrollArea } from "./ui/scroll-area";
-import { useRouter_UNSTABLE as useRouter } from "waku/router/client";
+import { Link } from "waku/router/client";
 
-export const NoteListPreview = () => {
-  const notes = useAtomValue(notesAtom);
-  const { push, path } = useRouter();
-  const selectedNoteId = path.split("/").pop();
+export type NoteListPreviewProps = {
+  currentNoteId: string | undefined | null;
+};
+
+export const NoteListPreview = async ({
+  currentNoteId,
+}: NoteListPreviewProps) => {
+  const notes = await getNotes();
   return (
     <ScrollArea className="h-96">
       {notes.map((note) => (
-        <div
-          key={note.id}
-          className={`p-4 border-b border-border cursor-pointer hover:bg-accent ${
-            note.id === selectedNoteId ? "bg-accent" : ""
-          }`}
-          onClick={() => push(`/note/${note.id}`)}
-        >
-          <h3 className="font-semibold truncate">{note.title}</h3>
-          <p className="text-sm text-muted-foreground truncate">
-            {note.content}
-          </p>
-        </div>
+        <Link to={`/note/${note.id}`} key={note.id}>
+          <div
+            className={`p-4 border-b border-border cursor-pointer hover:bg-accent ${
+              note.id === currentNoteId ? "bg-accent" : ""
+            }`}
+          >
+            <h3 className="font-semibold truncate">{note.title}</h3>
+            <p className="text-sm text-muted-foreground truncate">
+              {note.content}
+            </p>
+          </div>
+        </Link>
       ))}
     </ScrollArea>
   );

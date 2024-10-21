@@ -1,5 +1,3 @@
-import { Button } from "../components/ui/button";
-import { Plus } from "lucide-react";
 import { NewNoteButton } from "../components/new-note-button";
 
 export default function Page() {

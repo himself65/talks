@@ -1,28 +1,21 @@
 "use client";
-import { notesAtom } from "../store/client";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
-import { useSetAtom } from "jotai/react";
-import { useRouter_UNSTABLE as useRouter } from "waku/router/client";
+import { addNote } from "../store";
+import { startTransition } from "react";
 
 export const NewNoteButton = () => {
-  const setNotes = useSetAtom(notesAtom);
-  const { push } = useRouter();
   return (
     <Button
       className="w-full"
       variant="default"
       onClick={() => {
-        const noteId = crypto.randomUUID();
-        setNotes((prev) => [
-          ...prev,
-          {
-            id: noteId,
-            content: "",
+        startTransition(async () => {
+          await addNote({
             title: "Untitled Note",
-          },
-        ]);
-        push(`/note/${noteId}`);
+            content: "",
+          });
+        });
       }}
     >
       <Plus className="mr-2 h-4 w-4" /> New Note

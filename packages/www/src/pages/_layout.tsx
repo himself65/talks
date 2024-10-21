@@ -4,13 +4,7 @@ import type { ReactNode } from "react";
 
 import { AI } from "../ai/provider";
 import { TooltipProvider } from "../components/ui/tooltip";
-import {
-  Bell,
-  CircleUser,
-  Home,
-  Menu,
-  Search,
-} from "lucide-react";
+import { Bell, CircleUser, Home, Menu, Search } from "lucide-react";
 import { Button } from "../components/ui/button";
 import {
   Card,
@@ -34,9 +28,9 @@ import { LlamaIndexLogo } from "../components/llamaindex";
 import { NewNoteButton } from "../components/new-note-button";
 import { NoteListPreview } from "../components/note-list-preview";
 
-type RootLayoutProps = { children: ReactNode };
+type RootLayoutProps = { children: ReactNode; path: string };
 
-export default async function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children, path }: RootLayoutProps) {
   return (
     <html>
       <head></head>
@@ -66,7 +60,11 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                   <div className="p-4 border-b border-border">
                     <NewNoteButton />
                   </div>
-                  <NoteListPreview />
+                  <NoteListPreview
+                    currentNoteId={
+                      path.startsWith("/note/") ? path.split("/")[2] : null
+                    }
+                  />
                 </nav>
                 <div className="mt-auto p-4">
                   <Card x-chunk="dashboard-02-chunk-0">
@@ -122,7 +120,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                           <CardHeader className="p-2 pt-0 md:p-4">
                             <CardTitle>Star llamaindex</CardTitle>
                             <CardDescription>
-                              Show your support by starring the project on GitHub.
+                              Show your support by starring the project on
+                              GitHub.
                             </CardDescription>
                           </CardHeader>
                           <CardContent className="p-2 pt-0 md:p-4 md:pt-0">

@@ -1,20 +1,14 @@
 "use client";
-import { useAtomValue } from "jotai";
-import { notesAtom } from "../store/client";
 import { Input } from "./ui/input";
-import { useSetAtom } from "jotai/react";
-import { useState } from "react";
+import { useState, use, startTransition } from "react";
+import { Note, updateNoteTitle } from "../store";
 
 type NoteTitleProps = {
-  noteId: string;
+  noteResource: Promise<Note>;
 };
 
 export const NoteTitle = (props: NoteTitleProps) => {
-  const note = useAtomValue(notesAtom).find((note) => note.id === props.noteId);
-  if (!note) {
-    throw new Error(`Note with id ${props.noteId} not found`);
-  }
-  const setNotes = useSetAtom(notesAtom);
+  const note = use(props.noteResource);
   const [editMode, setEditMode] = useState(false);
   const [title, setTitle] = useState(note.title);
   return (
@@ -29,9 +23,10 @@ export const NoteTitle = (props: NoteTitleProps) => {
           }}
           onBlur={() => {
             setEditMode(false);
-            setNotes((notes) =>
-              notes.map((n) => (n.id === props.noteId ? { ...n, title } : n)),
-            );
+            // fixme: optimistic update
+            startTransition(async () => {
+              await updateNoteTitle(note.id, title);
+            });
           }}
           autoFocus
         />
