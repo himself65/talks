@@ -46,6 +46,20 @@ It is built using:
   - `OPENAI_API_KEY` - The OpenAI API key
   - `LLAMA_CLOUD_API_KEY`(Optional) - The LlamaCloud API key
 
+- SQL Setup
+  
+  You need to create a table before running the app.
+
+  ```sql
+  CREATE EXTENSION vector;
+  CREATE TABLE notes (
+    id serial not null primary key,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+  ```
+
 ### Development
 
 ```bash
