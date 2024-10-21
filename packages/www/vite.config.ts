@@ -1,7 +1,10 @@
-export default () => {
+export default ({ mode }: any) => {
   return {
     optimizeDeps: {
-      exclude: ["llamaindex"],
+      exclude: [
+        "llamaindex",
+        mode === "development" ? "ai/rsc" : undefined,
+      ].filter(Boolean),
     },
     ssr: {
       external: ["llamaindex"],

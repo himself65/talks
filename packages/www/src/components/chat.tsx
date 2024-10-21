@@ -15,7 +15,7 @@ import { EmptyScreen } from "./empty-screen";
 import { AI } from "../ai/provider";
 
 export const Chat = () => {
-  const [messages, setMessages] = useUIState<typeof AI>();
+  const [{ messages }, setUIState] = useUIState<typeof AI>();
   const { submitUserMessage } = useActions<typeof AI>();
   const [inputValue, setInputValue] = useState("");
   const { formRef, onKeyDown } = useEnterSubmit();
@@ -46,36 +46,16 @@ export const Chat = () => {
   }, [inputRef]);
 
   return (
-    <div>
-      <div className="pb-[200px] pt-4 md:pt-10">
+    <div className="flex flex-col h-full">
+      <div className="flex-grow">
         {messages.length ? (
           <>
             <ChatList messages={messages} />
           </>
-        ) : (
-          <EmptyScreen
-            submitMessage={async (message) => {
-              // Add user message UI
-              setMessages((currentMessages) => [
-                ...currentMessages,
-                {
-                  id: Date.now(),
-                  display: <UserMessage>{message}</UserMessage>,
-                },
-              ]);
-
-              // Submit and get response message
-              const responseMessage = await submitUserMessage(message);
-              setMessages((currentMessages) => [
-                ...currentMessages,
-                responseMessage,
-              ]);
-            }}
-          />
-        )}
+        ) : null}
         <ChatScrollAnchor trackVisibility={true} />
       </div>
-      <div className="fixed inset-x-0 bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
+      <div className="w-full">
         <div className="mx-auto sm:max-w-2xl sm:px-4">
           <div className="px-4 py-2 space-y-4 border-t shadow-lg bg-background sm:rounded-t-xl sm:border md:py-4">
             <form
@@ -83,35 +63,35 @@ export const Chat = () => {
               onSubmit={async (e: any) => {
                 e.preventDefault();
 
-                // Blur focus on mobile
-                if (window.innerWidth < 600) {
-                  e.target["message"]?.blur();
-                }
-
-                const value = inputValue.trim();
-                setInputValue("");
-                if (!value) return;
-
-                // Add user message UI
-                setMessages((currentMessages) => [
-                  ...currentMessages,
-                  {
-                    id: Date.now(),
-                    display: <UserMessage>{value}</UserMessage>,
-                  },
-                ]);
-
-                try {
-                  // Submit and get response message
-                  const responseMessage = await submitUserMessage(value);
-                  setMessages((currentMessages) => [
-                    ...currentMessages,
-                    responseMessage,
-                  ]);
-                } catch (error) {
-                  // You may want to show a toast or trigger an error state.
-                  console.error(error);
-                }
+                // // Blur focus on mobile
+                // if (window.innerWidth < 600) {
+                //   e.target["message"]?.blur();
+                // }
+                //
+                // const value = inputValue.trim();
+                // setInputValue("");
+                // if (!value) return;
+                //
+                // // Add user message UI
+                // setMessages((currentMessages) => [
+                //   ...currentMessages,
+                //   {
+                //     id: Date.now(),
+                //     display: <UserMessage>{value}</UserMessage>,
+                //   },
+                // ]);
+                //
+                // try {
+                //   // Submit and get response message
+                //   const responseMessage = await submitUserMessage(value);
+                //   setMessages((currentMessages) => [
+                //     ...currentMessages,
+                //     responseMessage,
+                //   ]);
+                // } catch (error) {
+                //   // You may want to show a toast or trigger an error state.
+                //   console.error(error);
+                // }
               }}
             >
               <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow bg-background sm:rounded-md sm:border sm:px-12">

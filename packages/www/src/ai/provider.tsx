@@ -1,5 +1,5 @@
 "use server";
-import { VectorStoreIndex, MetadataMode } from "llamaindex";
+import { VectorStoreIndex, MetadataMode, ChatMessage } from "llamaindex";
 import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
 import { createAI } from "ai/rsc";
 import { sql } from "../lib/sql";
@@ -14,10 +14,17 @@ const index = await VectorStoreIndex.fromVectorStore(vectorStore);
 
 const initialAIState = {};
 
-const initialUIState = {};
+const initialUIState = {
+  messages: [],
+} as {
+  messages: ChatMessage[];
+};
 
 export const AI = createAI({
   actions: {
+    submitUserMessage: async (message: string) => {
+      "use server";
+    },
     query: async (query: string) => {
       "use server";
       const queryEngine = index.asQueryEngine();

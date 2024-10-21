@@ -10,6 +10,7 @@ import {
   SidebarTrigger,
 } from "../components/ui/sidebar";
 import { AppSidebar } from "../components/app-sidebar";
+import { ChatSidebar } from "../components/chat-sidebar";
 
 type RootLayoutProps = { children: ReactNode; path: string };
 
@@ -22,17 +23,18 @@ export default async function RootLayout({ children, path }: RootLayoutProps) {
       <body>
         <SidebarProvider>
           <TooltipProvider>
-            <div className="h-screen w-full flex">
-              <AppSidebar />
-              <SidebarInset>
-                <AI>
+            <AI>
+              <div className="h-screen w-full flex">
+                <AppSidebar />
+                <SidebarInset>
                   <div className="flex flex-col flex-1">
                     <SidebarTrigger />
                     <Suspense>{children}</Suspense>
                   </div>
-                </AI>
-              </SidebarInset>
-            </div>
+                </SidebarInset>
+                <ChatSidebar />
+              </div>
+            </AI>
           </TooltipProvider>
         </SidebarProvider>
       </body>
