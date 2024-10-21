@@ -31,6 +31,12 @@ importers:
 
   packages/www:
     dependencies:
+      "@llamaindex/core":
+        specifier: ^0.3.3
+        version: 0.3.3(@aws-crypto/sha256-js@5.2.0)(@xenova/transformers@2.17.2)(gpt-tokenizer@2.5.1)(js-tiktoken@1.0.15)(pathe@1.1.2)
+      "@llamaindex/openai":
+        specifier: ^0.1.20
+        version: 0.1.20(@aws-crypto/sha256-js@5.2.0)(@xenova/transformers@2.17.2)(encoding@0.1.13)(gpt-tokenizer@2.5.1)(js-tiktoken@1.0.15)(pathe@1.1.2)(zod@3.23.8)
       "@neondatabase/serverless":
         specifier: ^0.10.1
         version: 0.10.1

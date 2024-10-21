@@ -8,7 +8,7 @@
  * );
  */
 import { cache } from "react";
-import { sql } from "../lib/sql";
+import { sql, updateNoteEmbedding } from "../lib/sql";
 import { unstable_rerenderRoute } from "waku/router/server";
 
 export type Note = {
@@ -55,4 +55,5 @@ export const updateNoteTitle = async (id: string, title: string) => {
 export const updateNoteContent = async (id: string, content: string) => {
   "use server";
   await sql`UPDATE notes SET content = ${content} WHERE id = ${id}`;
+  updateNoteEmbedding(id, content).catch(console.error);
 };

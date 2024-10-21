@@ -1,23 +1,24 @@
 "use server";
-import { VectorStoreIndex, MetadataMode, SimpleChatEngine } from "llamaindex";
-import { PGVectorStore } from "llamaindex/vector-store/PGVectorStore";
-import { createAI, createStreamableUI } from "ai/rsc";
-import { sql } from "../lib/sql";
+import {
+  VectorStoreIndex,
+  SimpleChatEngine,
+  ChatMemoryBuffer,
+  ChatMessage,
+} from "llamaindex";
+import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
+import { vectorStore } from "../lib/sql";
 import { ReactNode } from "react";
 import { runAsyncFnWithoutBlocking } from "../lib/utils";
 import { Skeleton } from "../components/ui/skeleton";
-import { ReadableStream } from "node:stream/web";
-import { pipeline } from "node:stream/promises";
 import { BotMessage } from "../components/message";
+import { FilterOperator } from "llamaindex/vector-store/types";
 
-const vectorStore = new PGVectorStore({
-  shouldConnect: false,
-  client: sql,
-});
-
-// Split text and create embeddings. Store them in a VectorStoreIndex
 const index = await VectorStoreIndex.fromVectorStore(vectorStore);
-const initialAIState = {};
+const initialAIState = {
+  messages: [],
+} as {
+  messages: ChatMessage[];
+};
 
 type UIMessage = {
   id: number;
@@ -34,7 +35,24 @@ export const AI = createAI({
   actions: {
     submitSimple: async (message: string): Promise<UIMessage> => {
       "use server";
-      const simpleChatEngine = new SimpleChatEngine();
+      const aiState = getMutableAIState<typeof AI>();
+      aiState.update({
+        ...aiState.get(),
+        messages: [
+          ...aiState.get().messages,
+          {
+            role: "user",
+            content: message,
+          },
+        ],
+      });
+
+      const simpleChatEngine = new SimpleChatEngine({
+        memory: new ChatMemoryBuffer({
+          chatHistory: [],
+        }),
+      });
+
       const ui = createStreamableUI(
         <div className="space-y-2">
           <Skeleton className="h-4 w-full" />
@@ -48,10 +66,23 @@ export const AI = createAI({
           message,
           stream: true,
         });
+        let content = "";
 
         for await (const { delta } of response) {
+          content += delta;
           ui.append(delta);
         }
+
+        aiState.done({
+          ...aiState.get(),
+          messages: [
+            ...aiState.get().messages,
+            {
+              role: "assistant",
+              content,
+            },
+          ],
+        });
 
         ui.done();
       });
@@ -61,25 +92,37 @@ export const AI = createAI({
         display: <BotMessage>{ui.value}</BotMessage>,
       };
     },
-    submitIndex: async (query: string) => {
+    submitIndex: async (message: string, noteId: string) => {
       "use server";
-      const queryEngine = index.asQueryEngine();
-      const { response, sourceNodes } = await queryEngine.query({
-        query,
+      const aiState = getMutableAIState<typeof AI>();
+      aiState.update({
+        ...aiState.get(),
+        messages: [
+          ...aiState.get().messages,
+          {
+            role: "user",
+            content: message,
+          },
+        ],
       });
 
-      // Output response with sources
-      console.log(response);
+      const queryEngine = index.asQueryEngine({
+        preFilters: {
+          filters: [
+            {
+              key: "metadata",
+              value: `noteId=${noteId}`,
+              operator: FilterOperator.CONTAINS,
+            },
+          ],
+        },
+      });
+      const response = await queryEngine.query({
+        query,
+        stream: true,
+      });
 
-      if (sourceNodes) {
-        sourceNodes.forEach((source: any, index: number) => {
-          console.log(
-            `\n${index}: Score: ${source.score} - ${source.node
-              .getContent(MetadataMode.NONE)
-              .substring(0, 50)}...\n`,
-          );
-        });
-      }
+      // todo
     },
   },
   initialUIState,

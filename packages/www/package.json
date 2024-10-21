@@ -9,6 +9,8 @@
     "start": "waku start"
   },
   "dependencies": {
+    "@llamaindex/core": "^0.3.3",
+    "@llamaindex/openai": "^0.1.20",
     "@neondatabase/serverless": "^0.10.1",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",
