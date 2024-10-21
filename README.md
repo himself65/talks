@@ -1,5 +1,9 @@
 # Build RAG web app using LlamaIndexTS
 
+## `packages/slide`
+
+[Slides](./packages/slide/README.md)
+
 ## `packages/www`
 
 This package contains the web app for the RAG project.
