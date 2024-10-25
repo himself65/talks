@@ -477,6 +477,8 @@ layout: two-cols-header
 
 ::left::
 
+<v-click>
+
 ## What we covered
 
 - RAG
@@ -490,7 +492,11 @@ layout: two-cols-header
   - LlamaParse
 - Create llama
 
+</v-click>
+
 ::right::
+
+<v-click>
 
 ## Roadmap
 
@@ -501,6 +507,8 @@ layout: two-cols-header
   - voice input / output
 - Better Document (fumadoc)
 - Structured Outputs (zod)
+
+</v-click>
 
 ---
 layout: center
@@ -520,7 +528,11 @@ class: 'text-center pb-5'
 </div>
 </div>
 
-<div class="absolute bottom-10 left-10">
-Thanks Daishi Kato for Waku
-Thanks Marcus Schiesser for Create Llama
+<div class="absolute bottom-10 left-10 flex flex-col items-start text-sm">
+<div>
+  ❤️ <a href="https://github.com/dai-shi">Daishi Kato</a> for Waku
+</div>
+<div>
+  ❤️ <a href="https://github.com/marcusschiesser">Marcus Schiesser</a> for Create Llama
+</div>
 </div>
