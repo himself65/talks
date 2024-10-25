@@ -13,11 +13,9 @@ remoteAssets: true
 # Build RAG web app using LlamaIndexTS
 
 ---
-
 layout: intro
 class: pl-30
 glowSeed: 14
-
 ---
 
 # Alex Yang
@@ -213,99 +211,100 @@ vectorStore.add(documents);
 ```
 
 ---
+layout: center
+class: text-center
+glowX: 50
+glowY: 50
+glowSize: 0.4
+---
 
-## DEMO
+# Demo
 
 <https://demo-cityjs.llamaindex.ai>
 
-- React Server Component / React Server Function (not Next.js)
-- Waku
-- TipTap Editor
-- Vecerl AI SDK
-- Shadcn
-- LlamaIndexTS
-
 ---
 
-### Server Function
+## Features
 
-```ts {*|3,13,25,31,37|2,12,23,30,36}{maxHeight:'50vh'}
-export const getNotes = cache(async (): Promise<Note[]> => {
-  "use server";
-  const data = await sql`SELECT * FROM notes`;
-  return data.map((note: any) => ({
-    id: note.id,
-    title: note.title,
-    content: note.content,
-  }));
+<v-click>
+<li>
+React Server Component / React Server Function (not Next.js)
+</li>
+</v-click>
+
+<v-click>
+<li>
+Waku (created by Daishi Kato)
+</li>
+</v-click>
+
+<v-click>
+<li>
+TipTap Editor
+</li>
+</v-click>
+
+<v-click>
+<li>
+Vecerl AI SDK (utility for AI)
+</li>
+</v-click>
+
+<v-click>
+<li>
+Shadcn
+</li>
+</v-click>
+
+<v-click>
+<li>
+LlamaIndexTS
+</li>
+</v-click>
+
+---
+layout: center
+---
+
+### AI SDK RSC
+
+```tsx {*}{maxHeight:'50vh'}
+import { createAI } from "ai/rsc";
+
+export const AIProvider = createAI({
+  actions: {
+    search: async (query: string) => {
+      "use server";
+      const response = await chatEngine.chat({
+        query,
+        stream: true,
+      });
+
+      for await (const { delta } of response) {
+        ui.append(delta);
+      }
+
+      return {
+        id: Date.now(),
+        display: <BotMessage>{ui.value}</BotMessage>,
+      };
+    },
+  }
 });
-
-export const getNote = cache(async (id: string): Promise<Note> => {
-  "use server";
-  const data = await sql`SELECT * FROM notes WHERE id = ${id}`;
-  const note = data[0];
-  return {
-    id: note.id,
-    title: note.title,
-    content: note.content,
-  };
-});
-
-export const addNote = async (note: Pick<Note, "title" | "content">) => {
-  "use server";
-  const data =
-    await sql`INSERT INTO notes (title, content) VALUES (${note.title}, ${note.content})`;
-  rerender(`/`);
-};
-
-export const updateNoteTitle = async (id: string, title: string) => {
-  "use server";
-  const data = await sql`UPDATE notes SET title = ${title} WHERE id = ${id}`;
-  rerender(`/notes/${id}`);
-};
-
-export const updateNoteContent = async (id: string, content: string) => {
-  "use server";
-  const data =
-    await sql`UPDATE notes SET content = ${content} WHERE id = ${id}`;
-  rerender(`/notes/${id}`);
-};
 ```
 
 ---
+layout: center
+---
 
-### Component
+## Multi Modal
 
-```tsx
-export default async function Note({ noteId }: { noteId: string }) {
-  const noteResource = getNote(noteId);
-  return (
-    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-      <NoteTitle noteResource={noteResource} />
-      <div className="overflow-scroll size-full block rounded-lg border border-dashed shadow-sm">
-        {noteResource.then(({ content, id }) => (
-          <Editor content={content} id={id} />
-        ))}
-      </div>
-    </main>
-  );
-}
-```
-
-## Multi-Modal
-
+<v-click>
 Natively!
+</v-click>
 
+<v-click>
 ```ts
-const reader = new SimpleDirectoryReader();
-const documents = await reader.loadData({
-  directoryPath: "./data",
-});
-const storageContext = await getStorageContext();
-const index = await VectorStoreIndex.fromDocuments(documents, {
-  storageContext,
-});
-
 const retriever = index.asRetriever({ topK: { TEXT: 1, IMAGE: 3 } });
 const results = await retriever.retrieve({
   query: "what are Vincent van Gogh's famous paintings",
@@ -317,11 +316,10 @@ for (const result of results) {
   }
   if (node instanceof ImageNode) {
     console.log(`Image: ${node.getUrl()}`);
-  } else if (node instanceof TextNode) {
-    console.log("Text:", node.text);
   }
 }
 ```
+</v-click>
 
 ---
 
@@ -398,6 +396,8 @@ console.log("Final code:\n", result.data.result);
 ```
 
 ---
+layout: center
+---
 
 ## Create llama
 
@@ -406,22 +406,35 @@ npx create-llama@latest
 ```
 
 ---
+glowHue: 90
+glow: top-right
+class: flex items-center justify-center
+---
+
+<Tweet id="1849021022093377738" class="h-full overflow-scroll important:[&_iframe]:w-200 important:[&_iframe]:rounded-13px important:[&_iframe]:shadow-xl" v-click />
+
+---
 
 ## LlamaParse
 
-From unstructured data like (PDF, DOCX, etc.) to structured data(JSON, raw text, etc.)
+- State-of-the-art table extraction
+- Provide natural language instructions to parse the output in the exact format you want it.
+- JSON mode
+- Image extraction
+- Support for 10+ file types (.pdf, .pptx, .docx, .html, .xml, and more)
+- Foreign language support
+
+<https://cloud.llamaindex.ai>
 
 ```shell
 npm i @llamaindex/cloud
 ```
 
-Also support in browser
-
 ---
 
 ## LlamaCloud (private beta)
 
-cloud.llamaindex.ai
+<https://cloud.llamaindex.ai>
 
 All in one solution for RAG
 
@@ -429,6 +442,7 @@ All in one solution for RAG
 - data storage
 - performance
 
+````md magic-move
 ```ts
 const reader = new SimpleDirectoryReader();
 const documents = await reader.loadData({
@@ -437,7 +451,6 @@ const documents = await reader.loadData({
 const vectorIndex = await VectorStoreIndex.fromDocuments(documents);
 const retriever = vectorIndex.asRetriever({ similarityTopK: 3 });
 ```
-
 ```ts
 import { LlamaCloudIndex } from "llamaindex";
 
@@ -448,10 +461,15 @@ const documents = await reader.loadData({
 const vectorIndex = await LlamaCloudIndex.fromDocuments(documents);
 const retriever = vectorIndex.asRetriever({ similarityTopK: 3 });
 ```
+````
 
 ---
+layout: two-cols-header
+---
 
-# LlamaIndexTS
+# LlamaIndex.TS
+
+::left::
 
 ## What we covered
 
@@ -462,6 +480,11 @@ const retriever = vectorIndex.asRetriever({ similarityTopK: 3 });
 - Multimodal
 - Agent
 - Workflow
+- LlamaCloud
+  - LlamaParse
+- Create llama
+
+::right::
 
 ## Roadmap
 
@@ -469,15 +492,13 @@ const retriever = vectorIndex.asRetriever({ similarityTopK: 3 });
   - better type
   - generate flow graph in UI
 - Better Multimodal
-  - gpt voice
+  - voice input / output
 - Better Document (fumadoc)
-- Better Structure ouput (zod)
+- Structured Outputs (zod)
 
 ---
-
 layout: center
 class: 'text-center pb-5'
-
 ---
 
 # Thank You!
