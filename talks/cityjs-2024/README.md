@@ -25,16 +25,11 @@ It is built using:
 - LLM
   - Simple Chat
   - Retrieval Chat
-  - Agent with tool call
-  - Workflow for customizing the AI workflow
 - React
   - Server Components / Server Function
   - Optimistic update
   - Streaming UI
   - Integration with a simple note-taking editor, LlamaIndexTS, and Vercel AI SDK
-- Node.js
-  - AsyncLocalStorage
-  - Web Stream API
 
 ## Usage
 
@@ -45,7 +40,6 @@ It is built using:
 
   - `DATABASE_URL` - The Postgres database URL
   - `OPENAI_API_KEY` - The OpenAI API key
-  - `LLAMA_CLOUD_API_KEY`(Optional) - The LlamaCloud API key
 
 - SQL Setup
 
