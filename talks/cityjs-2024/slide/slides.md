@@ -41,7 +41,7 @@ Working at LlamaIndex<br>
 <div class="flex flex-col items-center">
 
 <Excalidraw
-drawFilePath="./assets/00.excalidraw.json"
+drawFilePath="/00.excalidraw.json"
 class="w-[600px]"
 :darkMode="true"
 />
@@ -73,7 +73,7 @@ class="w-[600px]"
 <div class="flex flex-col items-center">
 
 <Excalidraw
-drawFilePath="./assets/01.excalidraw.json"
+drawFilePath="/01.excalidraw.json"
 class="w-[600px]"
 :darkMode="true"
 />
@@ -98,7 +98,7 @@ class="w-[600px]"
 
 ---
 
-## <LlamaIndexIcon /> Load, Store, Query
+## <img class="inline-block" src="/logo.svg" /> Load, Store, Query
 
 ````md magic-move
 ```ts
@@ -136,7 +136,7 @@ const response = await queryEngine.query({
 </v-click>
 ---
 
-## <LlamaIndexIcon /> Simple Chat Engine
+## <img class="inline-block" src="/logo.svg" /> Simple Chat Engine
 
 ````md magic-move
 ```ts
@@ -179,14 +179,14 @@ while (true) {
 
 ---
 
-## <LlamaIndexIcon /> Vector Store
+## <img class="inline-block" src="/logo.svg" /> Vector Store
 
 Text -> Vector
 
 <div class="flex flex-col items-center">
 
 <Excalidraw
-drawFilePath="./assets/02.excalidraw.json"
+drawFilePath="/02.excalidraw.json"
 class="w-[600px]"
 :darkMode="true"
 />
@@ -195,7 +195,7 @@ class="w-[600px]"
 
 ---
 
-## <LlamaIndexIcon /> Vector Store
+## <img class="inline-block" src="/logo.svg" /> Vector Store
 
 ```ts
 import postgres from "postgres";
@@ -218,13 +218,13 @@ glowY: 50
 glowSize: 0.4
 ---
 
-# <LlamaIndexIcon /> Demo
+# <img class="inline-block" src="/logo.svg" /> Demo
 
 <https://demo-cityjs.llamaindex.ai>
 
 ---
 
-## <LlamaIndexIcon /> Features
+## <img class="inline-block" src="/logo.svg" /> Features
 
 <v-click>
 <li>
@@ -297,7 +297,7 @@ export const AIProvider = createAI({
 layout: center
 ---
 
-## <LlamaIndexIcon/> Multi Modal
+## <img class="inline-block" src="/logo.svg" /> Multi Modal
 
 <v-click>
 Natively!
@@ -323,7 +323,7 @@ for (const result of results) {
 
 ---
 
-## <LlamaIndexIcon /> Agent
+## <img class="inline-block" src="/logo.svg" /> Agent
 
 Tool call
 
@@ -379,7 +379,7 @@ for await (const stepOutput of task) {
 
 ---
 
-## <LlamaIndexIcon /> Workflow
+## <img class="inline-block" src="/logo.svg" /> Workflow
 
 ```ts
 const codeAgent = new Workflow({ validate: true });
@@ -400,11 +400,15 @@ console.log("Final code:\n", result.data.result);
 layout: center
 ---
 
-## <LlamaIndexIcon /> Create llama
+<h2 class="mb-4">
+  <img class="inline-block" src="/logo.svg" /> Create llama
+</h2>
 
 ```shell
 npx create-llama@latest
 ```
+
+<img class="h-[256px] w-full mt-4" src="/create-llama.gif" />
 
 ---
 glowHue: 90
@@ -416,7 +420,7 @@ class: flex items-center justify-center
 
 ---
 
-## <LlamaIndexIcon /> LlamaParse
+## <img class="inline-block" src="/logo.svg" /> LlamaParse
 
 - State-of-the-art table extraction
 - Provide natural language instructions to parse the output in the exact format you want it.
@@ -433,7 +437,7 @@ npm i @llamaindex/cloud
 
 ---
 
-## <LlamaIndexIcon /> LlamaCloud (private beta)
+## <img class="inline-block" src="/logo.svg" /> LlamaCloud (private beta)
 
 <https://cloud.llamaindex.ai>
 
@@ -469,7 +473,7 @@ const retriever = vectorIndex.asRetriever({ similarityTopK: 3 });
 layout: two-cols-header
 ---
 
-# <LlamaIndexIcon /> LlamaIndex.TS
+# <img class="inline-block" src="/logo.svg" /> LlamaIndex.TS
 
 ::left::
 
