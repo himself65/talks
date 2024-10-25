@@ -10,11 +10,29 @@ title: Build RAG web app using LlamaIndexTS
 remoteAssets: true
 ---
 
-## Alex Yang
+# Build RAG web app using LlamaIndexTS
 
-Member of Node.js, Jotai, Waku.
+---
 
-Working at LlamaIndex.
+layout: intro
+class: pl-30
+glowSeed: 14
+
+---
+
+# Alex Yang
+
+<div class="[&>*]:important-leading-10 opacity-80">
+Member of Node.js, Jotai, Waku<br>
+Working at LlamaIndex<br>
+</div>
+
+<div my-10 w-min flex="~ gap-1" items-center justify-center>
+  <div i-ri-github-line op50 ma text-xl ml4/>
+  <div><a href="https://github.com/antfu" target="_blank" class="border-none! font-300">himself65</a></div>
+  <div i-ri-twitter-x-line op50 ma text-xl ml4/>
+  <div><a href="https://twitter.com/antfu7" target="_blank" class="border-none! font-300">himseif65</a></div>
+</div>
 
 ---
 
@@ -274,19 +292,110 @@ export default async function Note({ noteId }: { noteId: string }) {
 }
 ```
 
-## Question-Answering
-
----
-
 ## Multi-Modal
+
+Natively!
+
+```ts
+const reader = new SimpleDirectoryReader();
+const documents = await reader.loadData({
+  directoryPath: "./data",
+});
+const storageContext = await getStorageContext();
+const index = await VectorStoreIndex.fromDocuments(documents, {
+  storageContext,
+});
+
+const retriever = index.asRetriever({ topK: { TEXT: 1, IMAGE: 3 } });
+const results = await retriever.retrieve({
+  query: "what are Vincent van Gogh's famous paintings",
+});
+for (const result of results) {
+  const node = result.node;
+  if (!node) {
+    continue;
+  }
+  if (node instanceof ImageNode) {
+    console.log(`Image: ${node.getUrl()}`);
+  } else if (node instanceof TextNode) {
+    console.log("Text:", node.text);
+  }
+}
+```
 
 ---
 
 ## Agent
 
+Tool call
+
+```ts
+export const getCurrentIDTool = FunctionTool.from(
+  () => {
+    // ...
+  },
+  {
+    name: "get_user_id",
+    description: "Get a random user id",
+  },
+);
+```
+
+```ts
+import {
+  getCurrentIDTool,
+  getUserInfoTool,
+  getWeatherTool,
+} from "./utils/tools";
+const agent = new OpenAIAgent({
+  tools: [getCurrentIDTool, getUserInfoTool, getWeatherTool],
+});
+
+const response = await agent.chat(
+  "What is my current address weather based on my profile address?",
+);
+```
+
+```ts
+const task = await agent.createTask(
+  "What is my current address weather based on my profile?",
+  true,
+);
+for await (const stepOutput of task) {
+  const stream = stepOutput.output as ReadableStream<ChatResponseChunk>;
+  if (stepOutput.isLast) {
+    for await (const chunk of stream) {
+      process.stdout.write(chunk.delta);
+    }
+    process.stdout.write("\n");
+  } else {
+    // handing function call
+    console.log("handling function call...");
+    for await (const chunk of stream) {
+      console.log("debug:", JSON.stringify(chunk.raw));
+    }
+  }
+}
+```
+
 ---
 
 ## Workflow
+
+```ts
+const codeAgent = new Workflow({ validate: true });
+codeAgent.addStep(StartEvent, architect, { outputs: CodeEvent });
+codeAgent.addStep(ReviewEvent, coder, { outputs: CodeEvent });
+codeAgent.addStep(CodeEvent, reviewer, { outputs: ReviewEvent });
+
+const run = codeAgent.run(specification);
+for await (const event of codeAgent.streamEvents()) {
+  const msg = (event as MessageEvent).data.msg;
+  console.log(`${msg}\n`);
+}
+const result = await run;
+console.log("Final code:\n", result.data.result);
+```
 
 ---
 
@@ -294,25 +403,76 @@ export default async function Note({ noteId }: { noteId: string }) {
 
 From unstructured data like (PDF, DOCX, etc.) to structured data(JSON, raw text, etc.)
 
+```shell
+npm i @llamaindex/cloud
+```
+
+Also support in browser
+
 ---
 
 ## LlamaCloud (private beta)
 
+cloud.llamaindex.ai
+
 All in one solution for RAG
 
-- No worry about hosting
-- No worry about data storage
-- No worry about benchmarking
+- hosting
+- data storage
+- performance
+
+```ts
+const reader = new SimpleDirectoryReader();
+const documents = await reader.loadData({
+  directoryPath: "./data",
+});
+const vectorIndex = await VectorStoreIndex.fromDocuments(documents);
+const retriever = vectorIndex.asRetriever({ similarityTopK: 3 });
+```
+
+```ts
+import { LlamaCloudIndex } from "llamaindex";
+
+const reader = new SimpleDirectoryReader();
+const documents = await reader.loadData({
+  directoryPath: "./data",
+});
+const vectorIndex = await LlamaCloudIndex.fromDocuments(documents);
+const retriever = vectorIndex.asRetriever({ similarityTopK: 3 });
+```
 
 ---
 
-## What's more about LlamaIndexTS?
+# LlamaIndexTS
 
-- Data loader
-- More vector store / doc store / index store
-- More LLM / Embedding
-- Our community & your contribution
+## What we covered
+
+- RAG
+  - Data Reader
+  - Index
+  - Retriever
+- Multimodal
+- Agent
+- Workflow
+
+## Roadmap
+
+- Revamped Workflow v2
+  - better type
+  - generate flow graph in UI
+- Better Multimodal
+  - gpt voice
+- Better Document (fumadoc)
+- Better Structure ouput (zod)
 
 ---
 
-Thank you!
+layout: center
+class: 'text-center pb-5'
+
+---
+
+# Thank You!
+
+- Slides and Demo, himself65/cityjs-2024
+- All Code Example, runllama/LlamaIndex.TS
