@@ -98,7 +98,7 @@ class="w-[600px]"
 
 ---
 
-## Load, Store, Query
+## <LlamaIndexIcon /> Load, Store, Query
 
 ````md magic-move
 ```ts
@@ -136,7 +136,7 @@ const response = await queryEngine.query({
 </v-click>
 ---
 
-## Simple Chat Engine
+## <LlamaIndexIcon /> Simple Chat Engine
 
 ````md magic-move
 ```ts
@@ -179,7 +179,7 @@ while (true) {
 
 ---
 
-## Vector Store
+## <LlamaIndexIcon /> Vector Store
 
 Text -> Vector
 
@@ -195,7 +195,7 @@ class="w-[600px]"
 
 ---
 
-## Vector Store
+## <LlamaIndexIcon /> Vector Store
 
 ```ts
 import postgres from "postgres";
@@ -218,13 +218,13 @@ glowY: 50
 glowSize: 0.4
 ---
 
-# Demo
+# <LlamaIndexIcon /> Demo
 
 <https://demo-cityjs.llamaindex.ai>
 
 ---
 
-## Features
+## <LlamaIndexIcon /> Features
 
 <v-click>
 <li>
@@ -297,7 +297,7 @@ export const AIProvider = createAI({
 layout: center
 ---
 
-## Multi Modal
+## <LlamaIndexIcon/> Multi Modal
 
 <v-click>
 Natively!
@@ -323,7 +323,7 @@ for (const result of results) {
 
 ---
 
-## Agent
+## <LlamaIndexIcon /> Agent
 
 Tool call
 
@@ -345,6 +345,7 @@ import {
   getUserInfoTool,
   getWeatherTool,
 } from "./utils/tools";
+
 const agent = new OpenAIAgent({
   tools: [getCurrentIDTool, getUserInfoTool, getWeatherTool],
 });
@@ -378,7 +379,7 @@ for await (const stepOutput of task) {
 
 ---
 
-## Workflow
+## <LlamaIndexIcon /> Workflow
 
 ```ts
 const codeAgent = new Workflow({ validate: true });
@@ -399,7 +400,7 @@ console.log("Final code:\n", result.data.result);
 layout: center
 ---
 
-## Create llama
+## <LlamaIndexIcon /> Create llama
 
 ```shell
 npx create-llama@latest
@@ -415,7 +416,7 @@ class: flex items-center justify-center
 
 ---
 
-## LlamaParse
+## <LlamaIndexIcon /> LlamaParse
 
 - State-of-the-art table extraction
 - Provide natural language instructions to parse the output in the exact format you want it.
@@ -432,7 +433,7 @@ npm i @llamaindex/cloud
 
 ---
 
-## LlamaCloud (private beta)
+## <LlamaIndexIcon /> LlamaCloud (private beta)
 
 <https://cloud.llamaindex.ai>
 
@@ -451,6 +452,7 @@ const documents = await reader.loadData({
 const vectorIndex = await VectorStoreIndex.fromDocuments(documents);
 const retriever = vectorIndex.asRetriever({ similarityTopK: 3 });
 ```
+
 ```ts
 import { LlamaCloudIndex } from "llamaindex";
 
@@ -467,7 +469,7 @@ const retriever = vectorIndex.asRetriever({ similarityTopK: 3 });
 layout: two-cols-header
 ---
 
-# LlamaIndex.TS
+# <LlamaIndexIcon /> LlamaIndex.TS
 
 ::left::
 
@@ -503,5 +505,11 @@ class: 'text-center pb-5'
 
 # Thank You!
 
-- Slides and Demo, himself65/cityjs-2024
-- All Code Example, runllama/LlamaIndex.TS
+<div flex-col flex="~ gap-1" items-center justify-center>
+<div class="flex gap-1 items-center">
+  Slides and Demo <div inline-block i-ri-github-line op50 ma text-xl/>himself65/talks
+</div>
+<div class="flex gap-1 items-center">
+  All Code Example <div inline-block i-ri-github-line op50 ma text-xl/>runllama/LlamaIndex.TS
+</div>
+</div>
