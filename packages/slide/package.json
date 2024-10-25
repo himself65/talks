@@ -7,10 +7,16 @@
     "dev": "slidev --open",
     "export": "slidev export"
   },
+  "slidev": {
+    "addons": [
+      "slidev-addon-excalidraw"
+    ]
+  },
   "dependencies": {
     "@slidev/cli": "^0.50.0-beta.4",
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
+    "slidev-addon-excalidraw": "^1.0.4",
     "slidev-addon-graph": "^0.0.4",
     "vue": "^3.5.12"
   }
