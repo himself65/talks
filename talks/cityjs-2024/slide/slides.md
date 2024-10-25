@@ -220,7 +220,7 @@ glowSize: 0.4
 
 # <img class="inline-block" src="/logo.svg" /> Demo
 
-<https://demo-cityjs.llamaindex.ai>
+<https://cityjs2024.demo.llamaindex.ai>
 
 ---
 
@@ -511,9 +511,16 @@ class: 'text-center pb-5'
 
 <div flex-col flex="~ gap-1" items-center justify-center>
 <div class="flex gap-1 items-center">
-  Slides and Demo <div inline-block i-ri-github-line op50 ma text-xl/>himself65/talks
+  Slides and Demo <div inline-block i-ri-github-line op50 ma text-xl/>
+  <a href="https://github.com/himself65/talks">himself65/talks</a>
 </div>
 <div class="flex gap-1 items-center">
-  All Code Example <div inline-block i-ri-github-line op50 ma text-xl/>runllama/LlamaIndex.TS
+  All Code Example <div inline-block i-ri-github-line op50 ma text-xl/>
+  <a href="https://github.com/run-llama/LlamaIndexTS">runllama/LlamaIndex.TS</a>
 </div>
+</div>
+
+<div class="absolute bottom-10 left-10">
+Thanks Daishi Kato for Waku
+Thanks Marcus Schiesser for Create Llama
 </div>
