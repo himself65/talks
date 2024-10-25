@@ -399,6 +399,14 @@ console.log("Final code:\n", result.data.result);
 
 ---
 
+## Create llama
+
+```shell
+npx create-llama@latest
+```
+
+---
+
 ## LlamaParse
 
 From unstructured data like (PDF, DOCX, etc.) to structured data(JSON, raw text, etc.)
