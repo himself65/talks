@@ -1,9 +1,11 @@
-import { atomWithStorage } from "jotai/utils";
-import { atom } from "jotai/vanilla";
 import { Editor } from "@tiptap/react";
 import { createContextState } from "foxact/create-context-state";
+import { createLocalStorageState } from "foxact/create-local-storage-state";
 
-export const openAskAIAtom = atomWithStorage("open-ask-ai", false);
+const [useOpenAsk, useOpenAskValue] = createLocalStorageState("open-ask-ai", false);
 
 const [EditorProvider, useEditor, useSetEditor] = createContextState<Editor | null>(null);
-export { EditorProvider, useEditor, useSetEditor };
+export {
+  useOpenAsk, useOpenAskValue,
+  EditorProvider, useEditor, useSetEditor
+};
