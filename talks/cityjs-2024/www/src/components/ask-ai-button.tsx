@@ -1,11 +1,10 @@
 "use client";
 
 import { Button } from "./ui/button";
-import { useSetAtom } from "jotai";
-import { openAskAIAtom } from "../store/client";
+import { useOpenAsk } from "../store/client";
 
 export const AskAiButton = () => {
-  const setOpen = useSetAtom(openAskAIAtom);
+  const setOpen = useOpenAsk()[1];
   return (
     <Button className="w-full" variant="default">
       Ask AI

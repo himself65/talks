@@ -12,6 +12,7 @@ import {
 import { AppSidebar } from "../components/app-sidebar";
 import { ChatSidebar } from "../components/chat-sidebar";
 import { ComposeContextProvider } from "foxact/compose-context-provider";
+import { EditorProvider } from "../store/client";
 
 type RootLayoutProps = { children: ReactNode; path: string };
 
@@ -27,6 +28,7 @@ export default async function RootLayout({ children, path }: RootLayoutProps) {
             <SidebarProvider />,
             <TooltipProvider children={null} />,
             <AI children={null} />,
+            <EditorProvider />
           ]}
         >
           <div className="h-screen w-full flex">

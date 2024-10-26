@@ -32,7 +32,7 @@
     "clsx": "^2.1.1",
     "d3-scale": "^4.0.2",
     "date-fns": "^4.1.0",
-    "foxact": "^0.2.39",
+    "foxact": "^0.2.40",
     "jotai": "^2.10.1",
     "llamaindex": "^0.7.3",
     "lucide-react": "^0.453.0",

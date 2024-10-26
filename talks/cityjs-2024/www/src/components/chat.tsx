@@ -12,15 +12,14 @@ import { IconArrowElbow, IconPlus } from "./ui/icons";
 import { Button } from "./ui/button";
 import { ChatList } from "./chat-list";
 import { AI } from "../ai/provider";
-import { useAtomValue } from "jotai/react";
-import { editorAtom } from "../store/client";
+import { useEditor } from "../store/client";
 
 export type ChatProps = {
   noteId: string | null;
 };
 
 export const Chat = (props: ChatProps) => {
-  const editor = useAtomValue(editorAtom);
+  const editor = useEditor();
   const [{ messages }, setUIState] = useUIState<typeof AI>();
   const { submitSimple, submitIndex } = useActions<typeof AI>();
   const [inputValue, setInputValue] = useState("");
