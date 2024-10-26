@@ -12,6 +12,10 @@ remoteAssets: true
 
 # Build RAG web app using LlamaIndexTS
 
+<!--
+Hi, everyone, glad to be here talking about AI, RAG and LlamaIndex.
+-->
+
 ---
 layout: intro
 class: pl-30
@@ -31,6 +35,14 @@ Working at LlamaIndex<br>
   <div i-ri-twitter-x-line op50 ma text-xl ml4/>
   <div><a href="https://twitter.com/antfu7" target="_blank" class="border-none! font-300">himseif65</a></div>
 </div>
+
+<img src="https://avatars.githubusercontent.com/u/14026360" class="w-32 h-32 rounded-full absolute top-40 right-15" />
+
+<!--
+[introduce self first]
+
+For today topic, we gonna cover the basic RAG using LlamaIndex, and some key feature that LlamaIndex can do.
+-->
 
 ---
 
@@ -64,6 +76,25 @@ class="w-[600px]"
   </div>
 </v-click>
 
+<!--
+So, What's the RAG?
+You might try some simple chat demo yeasterday on LLM 101.
+
+How to interactive with LLM?
+
+Basically, you just structure your question inside a wall designed prompt, Prompt Engineer, plus your data. For example, your daily notes on notion, your draft in your notebook.
+
+But if you have large amount of data, this cause a problem.
+
+Costly, every token passed to AI is charged. Even Google Gemini has super large context window, you can put everything inside, BUT It's not free.
+
+Inaccurate, I ask the question about the Math, but I give all chemistry class note. AI might responses inaccurate, meaningless, unrelated result.
+
+Slow, from Engineer perspective, you device will load all document into memory then give OpenAI, there will have network bandwidth.
+
+So, that's why we have RAG.
+-->
+
 ---
 
 ## What is RAG?
@@ -95,6 +126,15 @@ class="w-[600px]"
     <div i-ph-check-circle-duotone text-green text-xl /> Fast
   </div>
 </v-click>
+
+<!--
+So that's why we have RAG.
+
+Basically it's trying to solve the problem that cost least computation.
+In this diagram, there's a module called retriever, which responsible for fetching the most relevant context given a user query. Then feed into the prompt, gives to LLM.
+
+How do we do this using llamaindex.ts?
+-->
 
 ---
 
@@ -134,6 +174,23 @@ const response = await queryEngine.query({
 <v-click>
   That's it!
 </v-click>
+
+<!--
+First, we have conecpt of Loader, which will load your data into llm readable format, for now, it's text document.
+
+You can see I call a new SimpleDirectoryReader, which is a utility class that includes many ohter data loader like PDFLoader, HTMLLoader, RawTextLoader... balabalba.
+
+Then we have documents array, which includes text.
+
+[click]
+
+Then, we create a VectorStoreIndex. It will compile the documents into comparable format. We call it embeddings. It's a number of array and eacy number indicate a property of something.
+
+Then we treat it as a retriever, and here I only need top 3 relevant data.
+
+Then llamaindex.ts have different typeof queryEngine, here we use RetrieverQueryEngine, and then you can export it just like a normal chat function.
+-->
+
 ---
 
 ## <img class="inline-block" src="/logo.svg" /> Simple Chat Engine
@@ -177,6 +234,20 @@ while (true) {
 ```
 ````
 
+<!--
+For a simple chat function.
+
+we have memory buffer for storing chat history.
+
+[click]
+
+and we have simple chat engine, without any optimization, just leave data as-is.
+
+[click]
+
+here, we use a node.js readline to have REPL in your terminal.
+-->
+
 ---
 
 ## <img class="inline-block" src="/logo.svg" /> Vector Store
@@ -192,6 +263,13 @@ class="w-[600px]"
 />
 
 </div>
+
+<!--
+You remember we talked about vector? 
+Officially, A vector is a numerical representation of the meaning of text in a node.
+
+We have vector store you can store the vector into like local file, or a database
+-->
 
 ---
 
@@ -209,6 +287,12 @@ const vectorStore = new PGVectorStore({
 
 vectorStore.add(documents);
 ```
+
+<!--
+For example, here I used our postgres vector store.
+
+It's very to use to add document into a real database.
+-->
 
 ---
 layout: center
@@ -246,7 +330,7 @@ TipTap Editor
 
 <v-click>
 <li>
-Vecerl AI SDK (utility for AI)
+Vercel AI SDK (utility for AI)
 </li>
 </v-click>
 
@@ -293,6 +377,12 @@ export const AIProvider = createAI({
 });
 ```
 
+<!--
+what's really inside of the code, is just what I introduced before.
+
+I have chatEngine, for here it could be retriever chat engine or just simple chat engine if you don't worry about the over context size.
+-->
+
 ---
 layout: center
 ---
@@ -300,7 +390,7 @@ layout: center
 ## <img class="inline-block" src="/logo.svg" /> Multi Modal
 
 <v-click>
-Natively!
+Builtin support
 </v-click>
 
 <v-click>
@@ -321,12 +411,21 @@ for (const result of results) {
 ```
 </v-click>
 
+<!--
+What about the multimodal? like image?
+
+Builtin support
+
+we have text document, also have image document, so it's very easy to use multi modal using llamaindex.ts
+-->
+
 ---
 
 ## <img class="inline-block" src="/logo.svg" /> Agent
 
 Tool call
 
+````md magic-move
 ```ts
 export const getCurrentIDTool = FunctionTool.from(
   () => {
@@ -376,6 +475,7 @@ for await (const stepOutput of task) {
   }
 }
 ```
+````
 
 ---
 
@@ -396,19 +496,47 @@ const result = await run;
 console.log("Final code:\n", result.data.result);
 ```
 
+<!--
+LlamaIndex Workflow, it's an event-driven abstraction used to chain together several events.
+
+So you imaging agent is just a chain call, user input -> tool call -> tool call, multiple tool cal, ai response.
+
+But the wokrflow could be a diagram, could includes multiple level of LLM doing their different jobs based on different prompt and context.
+-->
+
 ---
 layout: center
 ---
 
+<v-click>
 <h2 class="mb-4">
   <img class="inline-block" src="/logo.svg" /> Create llama
 </h2>
+</v-click>
 
+<v-click>
 ```shell
 npx create-llama@latest
 ```
 
 <img class="h-[256px] w-full mt-4" src="/create-llama.gif" />
+</v-click>
+
+<!--
+wait, alex, introducted so many API in 20 mins. I cannot catch up. Is there anyway to easy start?
+
+Right
+
+[click]
+
+we have create llama. It's just like create-next-app or create-react-app, but it's for AI.
+
+[click]
+
+with create llama, you can easily start build your own AI tools with our templates.
+
+we have both python, and javascript starter. under Next.js, so it includes both server and client feature to start with.
+-->
 
 ---
 glowHue: 90
@@ -417,6 +545,12 @@ class: flex items-center justify-center
 ---
 
 <Tweet id="1849021022093377738" class="h-full overflow-scroll important:[&_iframe]:w-200 important:[&_iframe]:rounded-13px important:[&_iframe]:shadow-xl" v-click />
+
+<!--
+He is my colleague, working on create llama. Days ago we published the workflow API using create-llama.
+
+You can have a try now.
+-->
 
 ---
 
@@ -434,6 +568,16 @@ class: flex items-center justify-center
 ```shell
 npm i @llamaindex/cloud
 ```
+
+<!--
+Beside of that, we have llama parse.
+
+Comparing with npm pdfjs, it's more accurate, and support many features.
+
+[read the list]
+
+You can try it today at ...
+-->
 
 ---
 
@@ -468,6 +612,18 @@ const vectorIndex = await LlamaCloudIndex.fromDocuments(documents);
 const retriever = vectorIndex.asRetriever({ similarityTopK: 3 });
 ```
 ````
+
+<!--
+Like I said, if you worry about like hosting, data sotrage, and performance.
+
+Yeah we didn't talk many topics like performance, for example how to embedding High-efficiency, how to split your large document into small parts to make retriever get the most accurate result.
+
+But we have llamacloud, for all in one solution you can signup for whitelist.
+
+ [click]
+
+yeah, you can just by replacing the module.
+-->
 
 ---
 layout: two-cols-header
@@ -505,10 +661,39 @@ layout: two-cols-header
   - generate flow graph in UI
 - Better Multimodal
   - voice input / output
-- Better Document (fumadoc)
+- [Better Document](https://ts.llamaindex.ai/) (fumadoc)
+  - Call for volunteers
 - Structured Outputs (zod)
 
 </v-click>
+
+<!--
+So, let's look back about what we discussed so far.
+
+we introduced the RAG. you combine data reader, index retriever, then you have a basic RAG.
+
+we talked about the multimodal that llamaindex.ts builtin support.
+
+we talked about agent and workflow you can customize your logic, with LLM.
+
+and we have llamacloud, llamaparse to reduce the time you spend
+
+of course we have create llama you can just npx create-llama to start a RAG in few lines.
+
+[click]
+
+for the next milestone.
+
+we gonna have better typescript on workflow, type hinting. so that you can generate the graph in UI.
+
+then we need better multimodal, for gpt voice input and output.
+
+and structued output, which we a little bit delay because I was refactoring some core modules to make sure they are working better with new features.
+
+and the better document, for this one, we wanna implement some function with UI totural to help you to understand what's RAG and how to get started.
+
+yesterday I just created the basic homepage for our new document. the rest parts are still pure markdown files, but you still could learn the depth of the RAG.
+-->
 
 ---
 layout: center
@@ -536,3 +721,11 @@ class: 'text-center pb-5'
   ❤️ <a href="https://github.com/marcusschiesser">Marcus Schiesser</a> for Create Llama
 </div>
 </div>
+
+<!--
+And, that's it.
+
+you can find all my slides, demo in my github profile. and more code example in runllama/LlamaIndex.TS
+
+[thanks]
+-->
