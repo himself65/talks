@@ -284,6 +284,63 @@ class BasicAgent(Workflow):
 
 ## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow
 
+````markdown magic-move
+```python
+from llama_index.core.graph_stores import SimpleGraphStore
+from llama_index.core import StorageContext, KnowledgeGraphIndex
+
+graph_store = SimpleGraphStore()
+storage_context = StorageContext.from_defaults(graph_store=graph_store)
+
+index = KnowledgeGraphIndex.from_documents(
+    documents,
+    max_triplets_per_chunk=2,
+    storage_context=storage_context,
+)
+chat_engine = index.as_chat_engine()
+chat_engine.chat(
+    message="...",
+    chat_history=[],
+)
+```
+
+```python
+from llama_index.core import StorageContext, KnowledgeGraphIndex
+from llama_index.core.tools import QueryEngineTool
+
+graph_store = SimpleGraphStore()
+storage_context = StorageContext.from_defaults(graph_store=graph_store)
+
+# NOTE: can take a while!
+index = KnowledgeGraphIndex.from_documents(
+    documents,
+    max_triplets_per_chunk=2,
+    storage_context=storage_context,
+)
+query_engine = index.as_query_engine()
+tool = QueryEngineTool.from_defaults(
+  query_engine=query_engine,
+  name="query from knowledge graph",
+  description="...",
+)
+```
+
+```python
+from llama_index.vector_stores.neo4jvector import Neo4jVectorStore
+
+neo4j_vector = Neo4jVectorStore(username, password, url, embed_dim)
+
+index = neo4j_vector.index_documents(
+    documents,
+    max_triplets_per_chunk=2,
+)
+```
+````
+
+---
+
+## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow
+
 ```python
 from llama_index.utils.workflow import (
     draw_all_possible_flows,
@@ -366,3 +423,83 @@ $ llamactl run --deployment QuickStart --arg message 'Hello, LlamaIndex!'
 <div class="mt-10"/>
 
 ![structure.png](/structure.png)
+
+---
+
+## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow JS
+
+```shell
+npm add @llamaindex/workflow
+```
+
+---
+
+## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow JS
+
+```tsx
+'use server';
+import { createStreamableUI } from 'ai/rsc';
+import { runWithoutBlocking } from './utils';
+
+export async function compute () {
+  'use server';
+  const ui = createStreamableUI();
+  const context = workflow.run(100, {
+    sum: 0
+  });
+  runWithoutBlocking(async () => {
+    for await (const event of context) {
+      if (event instanceof ComputeResultEvent) {
+        // Update UI
+      } else if (event instanceof StopEvent) {
+        // Update UI
+      }
+      // ...
+    }
+  });
+  return ui.value;
+}
+```
+
+---
+
+## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow JS
+
+### Snapshot API (experimental)
+
+```typescript
+const workflow = new Workflow()
+const context = workflow.run(input).with(data)
+const snapshot: Uint8Array = context.snapshot()
+{
+  const restoredContext = workflow.recover(snapshot).with(data)
+  const result = await restoredContext
+}
+```
+
+---
+glowHue: 90
+glow: top-right
+class: flex items-center justify-center
+---
+
+## <img class="inline-block" src="/logo.svg" /> Create Llama
+
+<Tweet id="1856589050129592809" class="ml-2 h-full overflow-scroll important:[&_iframe]:w-200 important:[&_iframe]:rounded-13px important:[&_iframe]:shadow-xl" v-click />
+
+---
+
+## Summary
+
+- LlamaIndex Workflow
+- llama deploy
+- LlamaIndex Workflow JS
+- create-llama
+  - for both python and javascript template
+
+---
+layout: center
+class: 'text-center pb-5'
+---
+
+# Thank You!
