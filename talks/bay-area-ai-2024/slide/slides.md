@@ -6,7 +6,7 @@ colorSchema: dark
 transition: fade-out
 mdc: true
 glowSeed: 4
-title: Build RAG web app using LlamaIndexTS
+title: Introduction to LlamaIndex Workflows
 remoteAssets: true
 ---
 
@@ -462,20 +462,86 @@ export async function compute () {
 ```
 
 ---
+layout: two-cols
+---
 
-## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow JS
+## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow
 
-### Snapshot API (experimental)
+### Context serialization
+
+Allow to stop and resume the workflow (e.g. for debugging, HTTP server, job queue)
+
+::right::
+
+<div class="mt-10"/>
+
+<div class="ml-4">
+
+````md magic-move
 
 ```typescript
+workflow.addStep({
+  inputs: [StartEvent<string>],
+  outputs: [...]
+}, async (context, startEvent) => {
+  const input = startEvent.data;
+  if (someCondition) {
+    // need user input more infomation
+    return new RequireUserInputEvent();
+  }
+  // ...
+});
+```
+
+```typescript
+// pause the workflow
 const workflow = new Workflow()
 const context = workflow.run(input).with(data)
-const snapshot: Uint8Array = context.snapshot()
-{
-  const restoredContext = workflow.recover(snapshot).with(data)
-  const result = await restoredContext
+for await (const event of context) {
+  if (event instanceof RequireUserInputEvent) {
+    // pause the workflow
+    const snapshot: Uint8Array = context.snapshot()
+    const signature = crypto.sign(snapshot)
+    await db.set(signature, context.data)
+    return res.json({ 
+      type: 'require-user-input',
+      snapshot,
+      signature
+    })
+  }
 }
 ```
+
+```typescript
+// resume the workflow
+const snapshot = req.body.snapshot
+const signature = req.body.signature
+if (snapshot && signature) {
+  if (crypto.verify(snapshot, signature)) {
+    const restoredData = db.get(cacheKey)
+    const context = workflow.recover(snapshot).with(restoredData)
+    for await (const event of context) {
+      // ... 
+    }
+  }
+}
+```
+
+```python
+# pause / resume the workflow in Python
+wf = Workflow()
+handler = wf.run()
+// ...
+# if we allow pickle, then we can pickle the LLM/embedding object
+state_dict = handler.ctx.to_dict(serializer=JsonPickleSerializer())
+
+new_handler = WorkflowHandler(
+    ctx=Context.from_dict(wf, state_dict, serializer=JsonPickleSerializer())
+)
+```
+````
+
+</div>
 
 ---
 glowHue: 90
@@ -492,10 +558,12 @@ class: flex items-center justify-center
 ## Summary
 
 - LlamaIndex Workflow
-- llama deploy
 - LlamaIndex Workflow JS
+- Llama Deploy
 - create-llama
   - for both python and javascript template
+- Some low-level APIs
+  - Context serialization
 
 ---
 layout: center
