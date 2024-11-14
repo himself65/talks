@@ -33,3 +33,336 @@ Working at LlamaIndex<br>
 </div>
 
 <img src="https://avatars.githubusercontent.com/u/14026360" class="w-32 h-32 rounded-full absolute top-40 right-15" />
+
+---
+
+# Why Workflow?
+
+- Split the task into smaller pieces
+- Event-driven
+- Async-first, easy to parallelize and embed into HTTP server
+
+---
+layout: two-cols
+---
+
+## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow
+
+Chat + Tool call
+
+::right::
+
+## Diagram
+
+<img src="/01_basic_agent.png" class="h-3/4" />
+
+---
+
+## Without Workflow
+
+````md magic-move
+```python
+async def run(
+    user_msg: str,
+):
+    # init
+    chat_history = []
+    chat_history.append(ChatMessage(role="user", content=user_msg))
+    system_prompt = "..."
+```
+
+```python
+async def run(
+    user_msg: str,
+):
+    # init
+    # ...
+
+    # chat with llm
+    llm_input = [ChatMessage(role="system", content=system_prompt)] + chat_history
+    response = await llm.achat_with_tools(tools, chat_history=llm_input)
+    
+    # handle response
+    tool_calls: list[ToolSelection] = llm.get_tool_calls_from_response(
+        response, error_on_no_tool_call=False
+    )
+
+    chat_history.append(response.message)
+
+    if len(tool_calls) == 0:
+        return response.message.content
+    else:
+        # start over the llm chat with the tool
+```
+
+```python
+async def run(
+    user_msg: str,
+):
+    # init
+    # ...
+    while True:        
+        llm_input = [ChatMessage(role="system", content=system_prompt)] + chat_history
+
+        # chat with llm
+        response = await llm.achat_with_tools(tools, chat_history=llm_input)
+        
+        # handle response
+        tool_calls: list[ToolSelection] = llm.get_tool_calls_from_response(
+            response, error_on_no_tool_call=False
+        )
+
+        chat_history.append(response.message)
+
+        if len(tool_calls) == 0:
+            return response.message.content
+        else:
+            for tool_call in tool_calls:
+                # start over the llm chat with the tool
+                tool_response = tools[tool_call.tool_id].run(tool_call.args)
+                chat_history.append(ChatMessage(role="tool", content=tool_response))
+```
+````
+
+---
+layout: two-cols
+---
+
+## Without Workflow
+
+<div class="mt-2 flex flex-col gap-4">
+<v-click>
+<div class="flex flex-row gap-2 items-center">
+  <div i-ph-warning-duotone text-orange text-xl /> manage the state
+</div>
+</v-click>
+
+<v-click>
+<div class="flex flex-row gap-2 items-center">
+  <div i-ph-warning-duotone text-orange text-xl /> parallelize the tool calls
+</div>
+</v-click>
+
+<v-click>
+<div class="flex flex-row gap-2 items-center">
+  <div i-ph-warning-duotone text-orange text-xl /> error handling
+</div>
+</v-click>
+
+<v-click>
+<div class="flex flex-row gap-2 items-center">
+  <div i-ph-warning-duotone text-orange text-xl /> debugging
+</div>
+</v-click>
+
+<v-click>
+<div class="flex flex-row gap-2 items-center">
+  <div i-ph-warning-duotone text-orange text-xl /> scalability
+</div>
+</v-click>
+</div>
+
+::right::
+
+```python
+async def run(
+        user_msg: str,
+):
+    # init
+    # ...
+    while True:
+        llm_input = [ChatMessage(role="system", content=system_prompt)] + chat_history
+
+        # chat with llm
+        response = await llm.achat_with_tools(tools, chat_history=llm_input)
+
+        # handle response
+        tool_calls: list[ToolSelection] = llm.get_tool_calls_from_response(
+            response, error_on_no_tool_call=False
+        )
+
+        chat_history.append(response.message)
+
+        if len(tool_calls) == 0:
+            return response.message.content
+        else:
+            for tool_call in tool_calls:
+                # start over the llm chat with the tool
+                tool_response = tools[tool_call.tool_id].run(tool_call.args)
+                chat_history.append(ChatMessage(role="tool", content=tool_response))
+```
+
+---
+
+## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow
+
+````md magic-move
+```python
+class LLMCallEvent(Event):
+    pass
+
+class ToolCallEvent(Event):
+    pass
+
+class ToolCallResultEvent(Event):
+    chat_message: ChatMessage
+
+class ProgressEvent(Event):
+    msg: str
+```
+
+```python
+class BasicAgent(Workflow):
+    @step
+    async def setup(
+        self, ctx: Context, ev: StartEvent
+    ) -> LLMCallEvent:
+        user_msg = ev.get("user_msg")
+        chat_history = []
+        chat_history.append(ChatMessage(role="user", content=user_msg))
+        await ctx.set("chat_history", chat_history)
+        return LLMCallEvent()
+```
+
+```python
+class BasicAgent(Workflow):
+    ...
+
+    @step
+    async def speak_with_agent(
+        self, ctx: Context, ev: LLMCallEvent
+    ) -> ToolCallEvent | StopEvent:
+        response = await llm.achat_with_tools(tools, chat_history=llm_input)
+        tool_calls: list[ToolSelection] = llm.get_tool_calls_from_response(
+            response, error_on_no_tool_call=False
+        )
+
+        if len(tool_calls) == 0:
+            return StopEvent(
+                result={
+                    "response": response.message.content,
+                }
+            )
+
+        await ctx.set("num_tool_calls", len(tool_calls))
+
+        for tool_call in tool_calls:
+            ctx.send_event(
+                ToolCallEvent(tool_call=tool_call, tools=agent_config.tools)
+            )
+```
+
+```python
+class BasicAgent(Workflow):
+    ...
+
+    @step(num_workers=4)
+    async def handle_tool_call(
+        self, ctx: Context, ev: ToolCallEvent
+    ) -> ToolCallResultEvent:
+        tool_call = ev.get("tool_call")
+        tool_response = ev.get("tools")[tool_call.tool_id].run(tool_call.args)
+        return ToolCallResultEvent(chat_message=tool_msg)
+        
+    @step
+    async def aggregate_tool_results(
+        self, ctx: Context, ev: ToolCallResultEvent
+    ) -> LLMCallEvent:
+        """Collects the results of all tool calls and updates the chat history."""
+        num_tool_calls = await ctx.get("num_tool_calls")
+        results = ctx.collect_events(ev, [ToolCallResultEvent] * num_tool_calls)
+        if not results:
+            return
+        chat_history = await ctx.get("chat_history")
+        chat_history.extend([result.chat_message for result in results])
+        await ctx.set("chat_history", chat_history)
+        return LLMCallEvent()
+```
+````
+
+---
+
+## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow
+
+```python
+from llama_index.utils.workflow import (
+    draw_all_possible_flows,
+)
+
+# Draw all
+draw_all_possible_flows(workflow, filename="workflow-preview.html")
+```
+
+---
+
+![diagram-preview.png](/diagram-preview.png)
+
+---
+
+# <img class="inline-block" src="/logo.svg" /> LlamaIndex Deploy
+
+<v-click>
+  <div class="flex flex-row gap-2 items-center">
+     <div i-ph-check-circle-duotone text-green text-xl /> Seamless Deployment
+  </div>
+</v-click>
+<v-click>
+  <div class="flex flex-row gap-2 items-center">
+     <div i-ph-check-circle-duotone text-green text-xl /> Scalability
+  </div>
+</v-click>
+<v-click>
+  <div class="flex flex-row gap-2 items-center">
+     <div i-ph-check-circle-duotone text-green text-xl /> State Management
+  </div>
+</v-click>
+<v-click>
+  <div class="flex flex-row gap-2 items-center">
+     <div i-ph-check-circle-duotone text-green text-xl /> Async-first
+  </div>
+</v-click>
+
+<v-click>
+```yaml
+name: QuickStart
+
+control-plane:
+port: 8000
+
+default-service: basic_agent
+
+services:
+basic_agent:
+name: Basic Agent
+source:
+type: local
+name: .
+path: workflow_demo.py:basic_agent
+
+```
+</v-click>
+
+---
+layout: two-cols
+---
+
+## <img class="inline-block" src="/logo.svg" /> LlamaIndex Deploy
+
+```shell
+$ python -m llama_deploy.apiserver
+INFO:     Started server process [10842]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:4501 (Press CTRL+C to quit)
+
+$ llamactl deploy deployment.yml
+Deployment successful: QuickStart
+
+$ llamactl run --deployment QuickStart --arg message 'Hello, LlamaIndex!'
+```
+
+::right::
+
+<div class="mt-10"/>
+
+![structure.png](/structure.png)
