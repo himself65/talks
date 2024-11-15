@@ -567,7 +567,17 @@ glow: top-right
 class: flex items-center justify-center
 ---
 
+<div
+  class="flex flex-col gap-2"
+>
+
 ## <img class="inline-block" src="/logo.svg" /> Create Llama
+
+```shell
+npx create-llama@latest
+```
+
+</div>
 
 <Tweet id="1856589050129592809" class="ml-2 h-full overflow-scroll important:[&_iframe]:w-200 important:[&_iframe]:rounded-13px important:[&_iframe]:shadow-xl" v-click />
 
