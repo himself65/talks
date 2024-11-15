@@ -10,7 +10,13 @@ title: Introduction to LlamaIndex Workflows
 remoteAssets: true
 ---
 
+<img class="size-20" src="/logo.svg" /> 
+
 # Introduction to LlamaIndex Workflows
+
+<div class="absolute bottom-10 right-10 text-right">
+by Alex Yang
+</div>
 
 <!--
 Hello, everyone. I'm Alex, today. I'm gonna talk about the LlamaIndex Workflow.
