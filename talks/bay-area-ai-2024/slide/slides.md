@@ -12,6 +12,10 @@ remoteAssets: true
 
 # Introduction to LlamaIndex Workflows
 
+<!--
+Hello, everyone. I'm Alex, today. I'm gonna talk about the LlamaIndex Workflow.
+-->
+
 ---
 layout: intro
 class: pl-30
@@ -34,13 +38,11 @@ Working at LlamaIndex<br>
 
 <img src="https://avatars.githubusercontent.com/u/14026360" class="w-32 h-32 rounded-full absolute top-40 right-15" />
 
----
+<!--
+First, let me introduce myself first. I'm Alex Yang, Im mostly working on frontend, also the member of the node.js, and some react ecosystem like jotai a state managerment library and waku, a minimal react framework.
 
-# Why Workflow?
-
-- Split the task into smaller pieces
-- Event-driven
-- Async-first, easy to parallelize and embed into HTTP server
+Currently I'm working in LlamaIndex and working on building RAG cloud platform and LlamaIndex open source projects.
+-->
 
 ---
 layout: two-cols
@@ -55,6 +57,10 @@ Chat + Tool call
 ## Diagram
 
 <img src="/01_basic_agent.png" class="h-3/4" />
+
+<!--
+We can start a simple agent example, the human ask a question and we call llm
+-->
 
 ---
 
@@ -350,6 +356,10 @@ from llama_index.utils.workflow import (
 draw_all_possible_flows(workflow, filename="workflow-preview.html")
 ```
 
+<!--
+We also provider the debugger tool that you can
+-->
+
 ---
 
 ![diagram-preview.png](/diagram-preview.png)
@@ -436,6 +446,8 @@ npm add @llamaindex/workflow
 
 ## <img class="inline-block" src="/logo.svg" /> LlamaIndex Workflow JS
 
+### Streaming with UI
+
 ```tsx
 'use server';
 import { createStreamableUI } from 'ai/rsc';
@@ -469,7 +481,7 @@ layout: two-cols
 
 ### Context serialization
 
-Allow to stop and resume the workflow (e.g. for debugging, HTTP server, job queue)
+- Allow to stop and resume the workflow (e.g. for debugging, HTTP server, job queue)
 
 ::right::
 
@@ -571,3 +583,14 @@ class: 'text-center pb-5'
 ---
 
 # Thank You!
+
+<div flex-col flex="~ gap-1" items-center justify-center>
+<div class="flex gap-1 items-center">
+  LlamaIndex <div inline-block i-ri-github-line op50 ma text-xl/>
+  <a href="https://github.com/run-llama/llama_index">runllama/llama_index</a>
+</div>
+<div class="flex gap-1 items-center">
+  LlamaIndex.TS<div inline-block i-ri-github-line op50 ma text-xl/>
+  <a href="https://github.com/run-llama/LlamaIndexTS">runllama/LlamaIndex.TS</a>
+</div>
+</div>
